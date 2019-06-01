@@ -1,6 +1,6 @@
 # doke
 
-run make tasks in docker. s/make/doke/
+Run your make tasks in docker with a drop-in command. `s/make/doke/`
 
 ## When to use doke?
 
@@ -8,7 +8,7 @@ If you have a Makefile, and you want to make it portable and repeatable - use `d
 
 This can be useful for synching up environments across a project team.
 
-Note: if you don't already use `make`, there's probably better options out there for you. Note that doke does nothing to isolate individual containers for different build steps (I'd need to write a Makefile parser for that) - try `docker-compose`, `docker`, or something like that.
+_Note: if you don't already use `make`, there's probably better options out there for you. Note that doke does nothing to isolate individual containers for different build steps (for this I'd need to really replace make in your container) - try `docker-compose`, `drone`, or something like that._
 
 ## How?
 
@@ -18,31 +18,39 @@ Note: if you don't already use `make`, there's probably better options out there
     go get -u -v github.com/laher/doke
  ```
 
- * Create a Dockerfile.doke
-
-This example is for a go app ('myapp'), which uses `jq` as part of the build process.
+ * Run `doke` once to generate a special dockerfile for doke to build with:
 
 ```
-  FROM golang:alpine 
-
-  RUN mkdir /myapp
-  RUN apk add --update make jq
-
-  WORKDIR /myapp
-
-  ENTRYPOINT ["make"]
+   doke
 ```
+   
+This creates a file called Dockerfile.doke, which doke will use to execute your make tasks. It's super minimal, your make tasks will fail (for now)
+
+ * Edit `Dockerfile.doke`
+
+If you're happy to use `alpine`, you can get a long way with more dependencies - `RUN apk add ...`
+
+Otherwise, you can start FROM any image (e.g. `ubuntu`), as long as you remember to install `make` and any other build deps
 
  * Now run `doke` instead of `make`
 
 ```
    doke build
 ```
+
    
 ## And then?
 
 Well, now you can rest assured that your build is portable - any unusual dependencies can now be encapsulated in your Dockerfile.doke
 
+_NOTE: doke doesn't currently let you actually install something outside your working directory._
+
 ## Next steps
 
-I'll make a bunch of example Dockerfiles to help you get started with common tech stacks.
+ * I'll make a bunch of example Dockerfiles to help you get started with common tech stacks.
+ * I might add a 'dokefile' to allow for mapping extra volumes for certain tasks (e.g. `make install`), but not sure yet about security considerations
+
+## Probably not
+
+ * I've considered some fancy stuff to parse the Makefile using [mmake's parser](https://github.com/tj/mmake/parser) to isolate steps use separate containers for each task.
+It sounds messy and complicated though, so I probably won't.
