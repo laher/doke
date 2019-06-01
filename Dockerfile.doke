@@ -1,0 +1,8 @@
+FROM golang:alpine 
+
+RUN mkdir /doke
+RUN apk add --update make
+
+WORKDIR /doke
+
+ENTRYPOINT ["make"]
