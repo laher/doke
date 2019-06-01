@@ -16,17 +16,19 @@ func main() {
 	}
 	img := ""
 	if _, err := os.Stat("Dockerfile.doke"); os.IsNotExist(err) {
-		img = "laher/doke"
+		img = "laher/doke-base"
 	} else if err != nil {
 		log.Fatalf("cant read filesystem to find Dockerfile.doke", err)
 	} else {
-		//docker run --rm -it $(docker build -q -f Dockerfile.doke .) $@
+		// we are trying to build the equivalent of ...
+		// docker run --rm $(docker build -q -f Dockerfile.doke .) $@
 		cmd := exec.Command("docker", "build", "-q", "-f", "Dockerfile.doke", ".")
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			log.Fatalf("docker-build failed with %s\n", err)
 		}
 		img = strings.TrimSpace(string(out))
+		// fmt.Println(img) //print output for consistency
 	}
 
 	base := filepath.Base(pwd)
