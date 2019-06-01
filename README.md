@@ -24,13 +24,15 @@ _Note: if you don't already use `make`, there's probably better options out ther
    doke
 ```
    
-This creates a file called Dockerfile.doke, which doke will use to execute your make tasks. It's super minimal, your make tasks will fail (for now)
+This creates a file called Dockerfile.doke, which doke will use to execute your make tasks. It's super minimal, your make tasks will fail (for now).
 
  * Edit `Dockerfile.doke`
 
-If you're happy to use `alpine`, you can get a long way with more dependencies - `RUN apk add ...`
+If you're happy to use `alpine`, you can get a long way with more dependencies - `RUN apk add ...`.
 
-Otherwise, you can start FROM any image (e.g. `ubuntu`), as long as you remember to install `make` and any other build deps
+Otherwise, you can start FROM any image (e.g. `ubuntu`), as long as you remember to install `make` and any other build dependencies.
+
+_Notice how doke's own [Dockerfile.doke](Dockerfile.doke) uses golang:alpine instead of straight alpine._
 
  * Now run `doke` instead of `make`
 
@@ -38,19 +40,34 @@ Otherwise, you can start FROM any image (e.g. `ubuntu`), as long as you remember
    doke build
 ```
 
-   
+## Env vars
+
+Env vars in docker are passed in explicitly. This is for the best, but it means doke works a little bit differently from make:
+
+Instead of:
+
+```
+MY_ENV_VAR=1 make print-an-env-var
+```
+
+Use the `-e` flag instead:
+
+```
+doke -e MY_ENV_VAR=1 print-an-env-var
+```
+
 ## And then?
 
 Well, now you can rest assured that your build is portable - any unusual dependencies can now be encapsulated in your Dockerfile.doke
 
-_NOTE: doke doesn't currently let you actually install something outside your working directory._
+_NOTE: `doke` doesn't currently let you actually install something outside your working directory._
 
 ## Next steps
 
  * I'll make a bunch of example Dockerfiles to help you get started with common tech stacks.
- * I might add a 'dokefile' to allow for mapping extra volumes for certain tasks (e.g. `make install`), but not sure yet about security considerations
+ * I might add a 'dokefile' config file, to allow for mapping extra volumes for certain tasks (e.g. `make install`). I'm not sure yet about security considerations so maybe not.
 
 ## Probably not
 
- * I've considered some fancy stuff to parse the Makefile using [mmake's parser](https://github.com/tj/mmake/parser) to isolate steps use separate containers for each task.
+ * I've considered some fancy stuff to parse the Makefile using [mmake's parser](https://godoc.org/github.com/tj/mmake/parser) to isolate steps use separate containers for each task.
 It sounds messy and complicated though, so I probably won't.

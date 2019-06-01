@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -24,7 +25,22 @@ ENTRYPOINT ["make"]
 `
 )
 
+type arrayFlags []string
+
+func (i *arrayFlags) String() string {
+	return "my string representation"
+}
+
+func (i *arrayFlags) Set(value string) error {
+	*i = append(*i, value)
+	return nil
+}
+
 func main() {
+	var envVars arrayFlags
+	flag.Var(&envVars, "e", "specify an env var")
+	flag.Parse()
+
 	pwd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("os.Getwd() failed with %s\n", err)
@@ -63,7 +79,11 @@ func main() {
 	// fmt.Println(img) //print output for consistency
 
 	cmd = exec.Command("docker")
-	cmd.Args = append(cmd.Args, "run", "--rm", "-v", fmt.Sprintf("%s:/%s", pwd, base), img)
+	cmd.Args = append(cmd.Args, "run", "--rm", "-v", fmt.Sprintf("%s:/%s", pwd, base))
+	for _, envVar := range envVars {
+		cmd.Args = append(cmd.Args, "-e", envVar)
+	}
+	cmd.Args = append(cmd.Args, img)
 	cmd.Args = append(cmd.Args, os.Args[1:]...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
