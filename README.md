@@ -65,7 +65,10 @@ _NOTE: `doke` doesn't currently let you actually install something outside your 
 ## Next steps
 
  * I'll make a bunch of example Dockerfiles to help you get started with common tech stacks.
- * I might add a 'dokefile' config file, to allow for mapping extra volumes for certain tasks (e.g. `make install`). I'm not sure yet about security considerations so maybe not.
+ * `--env-file` support
+ * I might add a 'dokefile' config file, to allow for e.g. 
+   * env stuff
+   * mapping extra volumes for certain tasks (e.g. `make install`). I'm not sure yet about security considerations so maybe not.
 
 ## Probably not
 
