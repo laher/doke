@@ -6,7 +6,7 @@ Run your make tasks in docker with a drop-in command. `s/make/doke/`
 
 If you have a Makefile, and you want to make it portable and repeatable - use `doke` instead of `make`.
 
-This can be useful for synching up environments across a project team.
+This can be useful for migigating environment differences across a project team. The "it works on my laptop" problem.
 
 _Note: if you don't already use `make`, there's probably better options out there for you. Note that doke does nothing to isolate individual containers for different build steps (for this I'd need to really replace make in your container) - try `docker-compose`, `drone`, or something like that._
 
