@@ -15,8 +15,10 @@ import (
 const (
 	dockerFileName     = "Dockerfile.doke"
 	dockerFileTemplate = `FROM alpine 
-
+RUN mkdir -p {{ .WorkDir }}
 RUN apk add --update tzdata ca-certificates make
+
+WORKDIR {{ .WorkDir }}
 
 ENTRYPOINT ["make"]
 `
