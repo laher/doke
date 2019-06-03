@@ -27,8 +27,8 @@ ENTRYPOINT ["make"]
 services:
   make:
     build:
-    	context: .
-	dockerfile: Dockerfile.doke
+      context: .
+      dockerfile: Dockerfile.doke
     working_dir: {{ .WorkDir }}
     volumes:
       - "$PWD:{{ .WorkDir }}"

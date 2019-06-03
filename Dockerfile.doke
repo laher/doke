@@ -1,7 +1,7 @@
 FROM golang:alpine 
 
 RUN mkdir /doke
-RUN apk add --update make
+RUN apk add --update tzdata ca-certificates make
 
 WORKDIR /doke
 
