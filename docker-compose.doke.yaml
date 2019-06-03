@@ -1,0 +1,10 @@
+version: '3'
+services:
+  make:
+    build:
+      context: .
+      dockerfile: Dockerfile.doke
+    working_dir: /doke
+    volumes:
+      - "$PWD:/doke"
+    entrypoint: make
